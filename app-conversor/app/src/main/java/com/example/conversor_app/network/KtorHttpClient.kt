@@ -1,6 +1,5 @@
 package com.example.conversor_app.network
 
-import android.util.Log
 import com.example.conversor_app.network.model.CurrencyTypeResult
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -9,7 +8,6 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.runBlocking
 
 object KtorHttpClient {
 
@@ -22,11 +20,16 @@ object KtorHttpClient {
         }
     }
 
-    init  {
-        val result: CurrencyTypeResult = runBlocking {
-            client.get("$BASE_URL/currency_types").body()
-        }
-
-        Log.d("KtorHttpClient", result.toString())
+    suspend fun getCurrencyTypes(): Result<CurrencyTypeResult> {
+        return requireGet(url = "$BASE_URL/currency_types")
     }
+
+    private suspend inline fun <reified T> requireGet(url: String): Result<T> {
+        return try {
+            Result.success(client.get(url).body())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
