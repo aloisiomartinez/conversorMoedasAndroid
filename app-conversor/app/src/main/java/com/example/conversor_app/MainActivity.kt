@@ -26,13 +26,23 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        lifecycleScope.launch {
-            viewModel.currencyTypes.collect { result ->
-                result.onSuccess {
-                    Log.d("ResultSuccess", "Result Successs $result")
-                    Toast.makeText(this@MainActivity, it.size.toString(), Toast.LENGTH_SHORT).show()
-                }.onFailure {
-                    Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
+        lifecycleScope.apply {
+            launch {
+                viewModel.currencyTypes.collect { result ->
+                    result.onSuccess {
+                        Toast.makeText(this@MainActivity, it.size.toString(), Toast.LENGTH_SHORT).show()
+                    }.onFailure {
+                        Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            launch {
+                viewModel.exchangeRate.collect {
+                    it.onSuccess {
+                        Log.d("ResultSuccess", "Result Successs $it")
+                    }.onFailure {
+                        Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
