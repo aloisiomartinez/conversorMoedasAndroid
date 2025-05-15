@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import coil3.load
+import coil3.svg.SvgDecoder
 import com.example.conversor_app.R
 import com.example.conversor_app.databinding.ItemCurrencyTypeBinding
 import com.example.conversor_app.network.model.CurrencyType
@@ -31,7 +33,9 @@ class CurrencyTypesAdapter(
             val binding = ItemCurrencyTypeBinding.inflate(LayoutInflater.from(parent?.context))
             with(binding) {
                 tvCurrencyAcronym.text = item.acronym
-                ivFlag.setImageResource(R.drawable.img_flag_br)
+                ivFlag.load(item.countryFlagImageUrl) {
+                    decoderFactory { result, options, _ -> SvgDecoder(result.source, options) }
+                }
             }
             binding.root
         }
