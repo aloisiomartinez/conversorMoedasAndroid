@@ -5,12 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="0dp">
+    tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imgLogo"
+        android:id="@+id/ivLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
@@ -23,26 +21,26 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
+        android:layout_margin="16dp"
         app:cardCornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogo">
+        app:layout_constraintTop_toBottomOf="@id/ivLogo">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="24dp">
+            android:layout_marginVertical="24dp"
+            android:layout_marginHorizontal="16dp">
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/app_name"
+                android:text="@string/conversor_de_moedas"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -51,47 +49,49 @@
                 android:id="@+id/tvSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/digite_o_valor_e_escolha_as_moedas"
-                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
             <LinearLayout
                 android:id="@+id/llFromExchange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                android:background="@drawable/bg_rounded_content"
-                android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="8dp"
+                android:layout_marginTop="36dp"
+                android:gravity="center"
                 android:weightSum="7"
+                android:background="@drawable/bg_rounded_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvSubtitle">
+                app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
 
                 <EditText
                     android:layout_width="0dp"
+                    android:importantForAutofill="no"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
-                    android:background="@android:color/transparent"
-                    android:importantForAutofill="no"
-                    android:inputType="number"
                     android:minHeight="48dp"
-                    tools:text="R$ 1000,00" />
+                    android:inputType="number"
+                    tools:text="R$ 1.000,00"
+                    android:background="@android:color/transparent" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/img_divider" />
+                    android:src="@drawable/img_divider"
+                    android:importantForAccessibility="no"/>
 
                 <Spinner
+                    android:id="@+id/spnFromExchange"
                     android:layout_width="0dp"
+                    android:minHeight="48dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:padding="8dp"
-                    tools:listitem="@layout/item_currency_type" />
+                    tools:listitem="@layout/item_currency_type"
+                    android:layout_weight="3" />
 
             </LinearLayout>
 
@@ -99,54 +99,54 @@
                 android:id="@+id/ivArrowsExchange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:importantForAccessibility="no"
+                android:layout_margin="16dp"
                 android:src="@drawable/ic_arrows_exchange"
-                app:layout_constraintBottom_toTopOf="@+id/llToExchange"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llFromExchange" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/llToExchange"
+                app:layout_constraintTop_toBottomOf="@id/llFromExchange"/>
 
             <LinearLayout
                 android:id="@+id/llToExchange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_rounded_content"
-                android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="center"
+                android:weightSum="7"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivArrowsExchange">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivArrowsExchange">
 
                 <EditText
                     android:layout_width="0dp"
+                    android:importantForAutofill="no"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
-                    android:background="@android:color/transparent"
-                    android:importantForAutofill="no"
-                    android:inputType="number"
                     android:minHeight="48dp"
-                    tools:text="R$ 1000,00" />
+                    android:inputType="number"
+                    tools:text="R$ 1.000,00"
+                    android:background="@android:color/transparent" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/img_divider" />
+                    android:src="@drawable/img_divider"/>
 
                 <Spinner
+                    android:id="@+id/spnToExchange"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:padding="8dp"
+                    android:minHeight="48dp"
                     tools:listitem="@layout/item_currency_type" />
 
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </androidx.cardview.widget.CardView>
 
