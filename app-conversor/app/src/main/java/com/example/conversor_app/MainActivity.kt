@@ -1,9 +1,12 @@
 package com.example.conversor_app
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -15,6 +18,9 @@ import com.example.conversor_app.databinding.ActivityMainBinding
 import com.example.conversor_app.network.model.CurrencyType
 import com.example.conversor_app.ui.CurrencyTypesAdapter
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.requireCurrencyTypes()
+        binding.etFromExchangeValue.addCurrencyMask()
 
         lifecycleScope.apply {
             launch {
@@ -68,9 +75,14 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
                 ) {
+
+                    val from = currencyTypes[position]
+                    val to = currencyTypes[spnToExchange.selectedItemPosition]
+
+                    tvFromCurrencySymbol.text = from.symbol
                     viewModel.requireExchangeRate(
-                        from = currencyTypes[position].acronym,
-                        to = currencyTypes[spnToExchange.selectedItemPosition].acronym
+                        from = from.acronym,
+                        to = to.acronym
                     )
                 }
 
@@ -90,14 +102,22 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
                 ) {
+                    val from = currencyTypes[spnFromExchange.selectedItemPosition]
+                    val to = currencyTypes[position]
+
+                    tvToCurrencySymbol.text = from.symbol
+
                     viewModel.requireExchangeRate(
-                        from = currencyTypes[spnFromExchange.selectedItemPosition].acronym,
-                        to = currencyTypes[position].acronym
+                        from = from.acronym,
+                        to = to.acronym
                     )
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     currencyTypes.firstOrNull()?.let { firstCurrencyType ->
+                        tvFromCurrencySymbol.text = firstCurrencyType.symbol
+                        tvToCurrencySymbol.text = firstCurrencyType.symbol
+
                         viewModel.requireExchangeRate(
                             from = firstCurrencyType.acronym,
                             to = firstCurrencyType.acronym
@@ -106,5 +126,44 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun EditText.addCurrencyMask() {
+        addTextChangedListener(
+            object : TextWatcher {
+                private var currentText = ""
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (s.toString() != currentText) {
+                        removeTextChangedListener(this)
+
+                        val cleanedString = s.toString().replace("[,.]".toRegex(), "")
+                        val currencyValue = cleanedString.toDoubleOrNull() ?: 0.0
+
+                        val formattedValue = DecimalFormat(
+                            "#,##0.00",
+                            DecimalFormatSymbols(Locale.getDefault())
+                        ).format(currencyValue / 100)
+                        currentText = formattedValue
+                        setText(formattedValue)
+                        setSelection(formattedValue.length)
+
+                        addTextChangedListener(this)
+                    }
+                }
+            }
+        )
     }
 }
